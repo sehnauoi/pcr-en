@@ -1,0 +1,85 @@
+name: Synchronize
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0/15 * * * *'
+
+jobs:
+  sync:
+    name: "Synchronize"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Expose Runner Virtual Environment Image Version
+        run: echo "ImageVersion=$ImageVersion" >> $GITHUB_ENV
+
+      - name: Cache fetcher
+        id: cache-primes
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            priconne-en_db-fetch
+          key: ${{ runner.os }}-${{ env.ImageVersion }}-fetcher
+
+      - name: Checkout fetcher
+        if: steps.cache-primes.outputs.cache-hit != 'true'
+        uses: actions/checkout@v2
+        with:
+          repository: Expugn/priconne-en_db-fetch
+          ref: 90e0ffdedc845f7dd7b0d4eced9202ab0ef903fe
+          path: priconne-en_db-fetch
+
+      - name: Install fetcher deps
+        if: steps.cache-primes.outputs.cache-hit != 'true'
+        run: |
+          cd priconne-en_db-fetch
+          pip install lz4
+          npm ci
+          ln -s .. out
+          cd ..
+
+      - name: Run fetcher
+        run: |
+          pip install lz4
+          cd priconne-en_db-fetch
+          node app.js
+          cd ..
+
+      - name: Check if we have new version
+        id: new_version
+        run: |
+          DIFF="$(git diff -p -1 version)"
+          if [[ "$DIFF" = "" ]]; then
+            echo "There is no new version!"
+            exit 0
+          fi
+          echo "::set-output name=exists::true"
+
+      - name: Generate .csv dump
+        if: steps.new_version.outputs.exists == 'true'
+        run: |
+          . .github/scripts/dump.sh master.db
+
+      - name: Commit, create PR, and merge
+        if: steps.new_version.outputs.exists == 'true'
+        run: |
+          export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          VERSION="$(jq .truth_version version)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add *.csv version
+          git checkout -b "patch/$VERSION"
+          git commit -m "$VERSION"
+          git push -u origin "patch/$VERSION"
+          gh pr create --title "Update $VERSION" --body "Created automatically w/ github actions"
+          gh pr merge --merge -d
