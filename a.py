@@ -12,4 +12,4 @@ url = "https://raw.githubusercontent.com/Expugn/priconne-quest-helper/master/dat
 response = requests.request("GET", url, headers=headers).json()
 
 df = pd.DataFrame(response['data'])
-df.to_csv('response_python.csv')
+df.to_csv('a.csv')
