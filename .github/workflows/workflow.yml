@@ -55,10 +55,11 @@ jobs:
           pip install requests
           npm ci
           ln -s .. out
-          cd ..
 
       - name: extract to csv
-        run: python a.py
+        run: |
+          python a.py
+          cd ..
 
       - name: Run fetcher
         run: |
