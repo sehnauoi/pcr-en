@@ -30,6 +30,13 @@ jobs:
             priconne-en_db-fetch
           key: ${{ runner.os }}-${{ env.ImageVersion }}-fetcher
 
+      - name: Checkout fetcher
+        if: steps.cache-primes.outputs.cache-hit != 'true'
+        uses: actions/checkout@v2
+        with:
+          repository: sehnauoi/en-db-fetch
+          path: priconne-en_db-fetch
+
       - uses: actions/checkout@v2          
       - uses: suisei-cn/actions-download-file@master
         id: downloadfile
@@ -39,13 +46,6 @@ jobs:
           target: priconne-en_db-fetch/
           auto-match: true
 
-      - name: Checkout fetcher
-        if: steps.cache-primes.outputs.cache-hit != 'true'
-        uses: actions/checkout@v2
-        with:
-          repository: sehnauoi/en-db-fetch
-          path: priconne-en_db-fetch
-
       - name: Install fetcher deps
         if: steps.cache-primes.outputs.cache-hit != 'true'
         run: |
@@ -53,10 +53,12 @@ jobs:
           pip install pandas
           pip install lz4
           pip install requests
-          python a.py
           npm ci
           ln -s .. out
           cd ..
+
+      - name: extract to csv
+        run: python a.py
 
       - name: Run fetcher
         run: |
