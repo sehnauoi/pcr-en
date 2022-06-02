@@ -42,7 +42,7 @@ jobs:
         name: Download a file
         with:
           url: "[Download](https://raw.githubusercontent.com/Expugn/priconne-quest-helper/master/data/character_data.json)"
-          target: ranks/
+          target: priconne-en_db-fetch/
           auto-match: true
 
       - name: Install fetcher deps
