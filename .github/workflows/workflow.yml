@@ -51,9 +51,9 @@ jobs:
         run: |
           cd priconne-en_db-fetch
           pip install pandas
-          python a.py
           pip install lz4
           pip install requests
+          python a.py
           npm ci
           ln -s .. out
           cd ..
