@@ -30,11 +30,20 @@ jobs:
             priconne-en_db-fetch
           key: ${{ runner.os }}-${{ env.ImageVersion }}-fetcher
 
+      - uses: actions/checkout@v2          
+      - uses: suisei-cn/actions-download-file@master
+        id: downloadfile
+        name: Download a file
+        with:
+          url: "[Download](https://raw.githubusercontent.com/Expugn/priconne-quest-helper/master/data/character_data.json)"
+          target: priconne-en_db-fetch/
+          auto-match: true
+
       - name: Checkout fetcher
         if: steps.cache-primes.outputs.cache-hit != 'true'
         uses: actions/checkout@v2
         with:
-          repository: Expugn/priconne-en_db-fetch
+          repository: sehnauoi/en-db-fetch
           ref: 90e0ffdedc845f7dd7b0d4eced9202ab0ef903fe
           path: priconne-en_db-fetch
 
@@ -42,10 +51,10 @@ jobs:
         if: steps.cache-primes.outputs.cache-hit != 'true'
         run: |
           cd priconne-en_db-fetch
+          python a.py
           pip install lz4
           pip install pandas
           pip install requests
-          python a.py
           npm ci
           ln -s .. out
           cd ..
