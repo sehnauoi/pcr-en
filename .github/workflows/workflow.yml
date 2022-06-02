@@ -44,7 +44,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sehnauoi/en-db-fetch
-          ref: 90e0ffdedc845f7dd7b0d4eced9202ab0ef903fe
           path: priconne-en_db-fetch
 
       - name: Install fetcher deps
