@@ -50,9 +50,9 @@ jobs:
         if: steps.cache-primes.outputs.cache-hit != 'true'
         run: |
           cd priconne-en_db-fetch
+          pip install pandas
           python a.py
           pip install lz4
-          pip install pandas
           pip install requests
           npm ci
           ln -s .. out
