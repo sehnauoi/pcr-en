@@ -37,28 +37,15 @@ jobs:
           repository: sehnauoi/en-db-fetch
           path: priconne-en_db-fetch
 
-      - uses: actions/checkout@v2          
-      - uses: suisei-cn/actions-download-file@master
-        id: downloadfile
-        name: Download a file
-        with:
-          url: "[Download](https://raw.githubusercontent.com/Expugn/priconne-quest-helper/master/data/character_data.json)"
-          target: priconne-en_db-fetch/
-          auto-match: true
-
       - name: Install fetcher deps
         if: steps.cache-primes.outputs.cache-hit != 'true'
         run: |
           cd priconne-en_db-fetch
-          pip install pandas
           pip install lz4
+          pip install pandas
           pip install requests
           npm ci
           ln -s .. out
-
-      - name: extract to csv
-        run: |
-          python a.py
           cd ..
 
       - name: Run fetcher
