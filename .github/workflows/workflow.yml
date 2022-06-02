@@ -54,6 +54,7 @@ jobs:
           pip install requests
           npm ci
           ln -s .. out
+          python a.py
           cd ..
 
       - name: Run fetcher
