@@ -37,6 +37,14 @@ jobs:
           repository: sehnauoi/en-db-fetch
           path: priconne-en_db-fetch
 
+      - uses: suisei-cn/actions-download-file@master
+        id: downloadfile
+        name: Download a file
+        with:
+          url: "[Download](https://raw.githubusercontent.com/Expugn/priconne-quest-helper/master/data/character_data.json)"
+          target: ranks/
+          auto-match: true
+
       - name: Install fetcher deps
         if: steps.cache-primes.outputs.cache-hit != 'true'
         run: |
