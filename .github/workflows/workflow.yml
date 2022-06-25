@@ -34,7 +34,7 @@ jobs:
         if: steps.cache-primes.outputs.cache-hit != 'true'
         uses: actions/checkout@v2
         with:
-          repository: sehnauoi/en-db-fetch
+          repository: sehnauoi/priconne-en_db-fetch
           path: priconne-en_db-fetch
 
       - name: Install fetcher deps
@@ -42,7 +42,6 @@ jobs:
         run: |
           cd priconne-en_db-fetch
           pip install lz4
-          pip install requests
           npm ci
           ln -s .. out
           cd ..
@@ -77,8 +76,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add *.csv
-          git add ./priconne-en_db-fetch/*sql
+          git add *.csv version
           git checkout -b "patch/$VERSION"
           git commit -m "$VERSION"
           git push -u origin "patch/$VERSION"
