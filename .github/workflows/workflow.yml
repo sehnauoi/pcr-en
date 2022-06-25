@@ -53,15 +53,15 @@ jobs:
           node app.js
           cd ..
 
-      - name: Check if we have new version
-        id: new_version
-        run: |
-          DIFF="$(git diff -p -1 version)"
-          if [[ "$DIFF" = "" ]]; then
-            echo "There is no new version!"
-            exit 0
-          fi
-          echo "::set-output name=exists::true"
+#       - name: Check if we have new version
+#         id: new_version
+#         run: |
+#           DIFF="$(git diff -p -1 version)"
+#           if [[ "$DIFF" = "" ]]; then
+#             echo "There is no new version!"
+#             exit 0
+#           fi
+#           echo "::set-output name=exists::true"
 
       - name: Generate .csv dump
         if: steps.new_version.outputs.exists == 'true'
