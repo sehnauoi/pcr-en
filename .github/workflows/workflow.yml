@@ -34,7 +34,7 @@ jobs:
         if: steps.cache-primes.outputs.cache-hit != 'true'
         uses: actions/checkout@v2
         with:
-          repository: sehnauoi/en_db-fetch
+          repository: Expugn/priconne-en_db-fetch
           path: priconne-en_db-fetch
 
       - name: Install fetcher deps
