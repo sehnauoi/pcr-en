@@ -64,7 +64,7 @@ jobs:
           echo "::set-output name=exists::true"
 
       - name: Generate .csv dump
-        if: steps.new_version.outputs.exists == 'true'
+#         if: steps.new_version.outputs.exists == 'true'
         run: |
           . .github/scripts/dump.sh master.db
 
